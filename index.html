@@ -1,0 +1,634 @@
+﻿<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CodeByM - Ramazan Rezervasyon Sistemi</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://raw.githubusercontent.com/code-by-m/brand/main/logo/Icon.png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2"
+          href="index.html"
+        >
+          <img
+            src="https://raw.githubusercontent.com/code-by-m/brand/main/logo/Icon.png"
+            alt="CodeByM Logo"
+            style="height: 24px; width: auto"
+          />
+          <span>CodeByM Özel Rezervasyon Sistemi</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavbar"
+          aria-controls="mainNavbar"
+          aria-expanded="false"
+          aria-label="Menü"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="mainNavbar" class="collapse navbar-collapse">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" data-section="reservations"
+                >Rezervasyonlar</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-section="settings">Ayarlar</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-section="logs">Loglar</a>
+            </li>
+            <li class="nav-item d-flex align-items-center ms-lg-3 me-2">
+              <span id="currentUserLabel" class="text-white-50 small"></span>
+            </li>
+            <li class="nav-item">
+              <button
+                id="logoutButton"
+                class="btn btn-outline-light btn-sm"
+                type="button"
+              >
+                <i class="bi bi-box-arrow-right"></i>
+                Çıkış
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mt-4 mb-5">
+      <div id="loginView" class="login-wrap">
+        <div class="login-logo-wrap">
+          <img
+            src="https://raw.githubusercontent.com/code-by-m/brand/main/logo/Transparent.png"
+            alt="CodeByM Logo"
+            class="login-logo"
+          />
+        </div>
+        <section class="card shadow-sm mx-auto" style="max-width: 520px">
+          <div class="card-body">
+            <div class="text-center mb-3">
+              <h1 class="h4 mt-2 mb-1">Giris</h1>
+              <p class="text-muted mb-0">Yetkili kullanıcı girişi yapın.</p>
+            </div>
+            <form id="loginForm" class="row g-3">
+              <div class="col-12">
+                <label class="form-label">
+                  <i class="bi bi-envelope"></i>
+                  E-posta
+                </label>
+                <input
+                  type="email"
+                  id="loginEmail"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="col-12">
+                <label class="form-label">
+                  <i class="bi bi-key"></i>
+                  Şifre
+                </label>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="col-12 d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="bi bi-box-arrow-in-right"></i>
+                  Giriş yap
+                </button>
+              </div>
+            </form>
+            <div
+              id="loginResult"
+              class="alert alert-info mt-3 mb-0"
+              role="alert"
+            >
+              <i class="bi bi-info-circle me-1"></i>
+              Lütfen giriş yapın.
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div id="appView" class="d-none">
+        <div
+          class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-4"
+        >
+          <div></div>
+        </div>
+
+        <div id="reservationsView">
+          <div class="row g-3 mb-4">
+            <div class="col-lg-4">
+              <div class="card shadow-sm border-0 bg-primary text-white h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-people-fill fs-4"></i>
+                    <h5 class="card-title mb-0">Toplam Boş Koltuk</h5>
+                  </div>
+                  <p class="display-6 mb-0" id="statRemaining">-</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card shadow-sm border-0 bg-success text-white h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-table fs-4"></i>
+                    <h5 class="card-title mb-0">Boş 2 Kişilik</h5>
+                  </div>
+                  <p class="display-6 mb-0" id="statFree2">-</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card shadow-sm border-0 bg-warning text-dark h-100">
+                <div class="card-body">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-grid-3x2-gap fs-4"></i>
+                    <h5 class="card-title mb-0">Boş 4 Kişilik</h5>
+                  </div>
+                  <p class="display-6 mb-0" id="statFree4">-</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <section class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center flex-wrap gap-2"
+              >
+                <div>
+                  <h2 class="h5 mb-1">Rezervasyon ekle</h2>
+                  <p class="text-muted mb-0">
+                    Yeni rezervasyon kaydı oluşturun.
+                  </p>
+                </div>
+                <span class="badge bg-info text-dark">Otomatik Masa Atama</span>
+              </div>
+              <form id="reservationForm" class="row g-3 mt-1">
+                <div class="col-md-6">
+                  <label class="form-label">
+                    <i class="bi bi-person"></i>
+                    Müşteri adı
+                  </label>
+                  <input
+                    type="text"
+                    id="customerName"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">
+                    <i class="bi bi-telephone"></i>
+                    Telefon
+                  </label>
+                  <input
+                    type="tel"
+                    id="customerPhone"
+                    class="form-control"
+                    placeholder="05xx xxx xx xx"
+                    required
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">
+                    <i class="bi bi-people"></i>
+                    Kişi sayısı
+                  </label>
+                  <input
+                    type="number"
+                    id="personCount"
+                    class="form-control"
+                    min="1"
+                    max="12"
+                    value="2"
+                    required
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">
+                    <i class="bi bi-calendar-event"></i>
+                    Tarih
+                  </label>
+                  <input
+                    type="date"
+                    id="startDate"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="col-12">
+                  <label class="form-label">
+                    <i class="bi bi-journal-text"></i>
+                    Not
+                  </label>
+                  <textarea
+                    id="reservationNote"
+                    class="form-control"
+                    rows="2"
+                    placeholder="Opsiyonel not"
+                  ></textarea>
+                </div>
+                <div class="col-md-4 d-grid">
+                  <label class="form-label d-none d-md-block">&nbsp;</label>
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle"></i>
+                    Rezervasyon oluştur
+                  </button>
+                </div>
+              </form>
+              <div
+                id="reservationResult"
+                class="alert alert-info alert-dismissible fade show mt-3 mb-0"
+                role="alert"
+              >
+                <i class="bi bi-info-circle me-1"></i>
+                İşlem sonucu burada görünür.
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Kapat"
+                ></button>
+              </div>
+            </div>
+          </section>
+
+          <section class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center flex-wrap gap-2"
+              >
+                <div>
+                  <h2 class="h5 mb-1">Canlı doluluk</h2>
+                  <p class="text-muted mb-0">
+                    Seçilen gündeki iftar saatine göre boş masaları gösterir.
+                  </p>
+                </div>
+                <div class="btn-group">
+                  <button
+                    type="button"
+                    id="checkAvailability"
+                    class="btn btn-success"
+                  >
+                    <i class="bi bi-graph-up-arrow"></i>
+                    Doluluğu göster
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="row g-3 align-items-end mt-1">
+                <div class="col-md-4">
+                  <label class="form-label">
+                    <i class="bi bi-calendar-date"></i>
+                    Tarih
+                  </label>
+                  <input
+                    type="date"
+                    id="availabilityDate"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="col-md-8">
+                  <div
+                    id="availabilityResult"
+                    class="alert alert-secondary mb-0"
+                    role="status"
+                  >
+                    <i class="bi bi-info-circle me-1"></i>
+                    Doluluk bilgisi burada listelenir.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2"
+              >
+                <div>
+                  <h2 class="h5 mb-1">Rezervasyonlar</h2>
+                  <p class="text-muted mb-0">
+                    Seçilen tarihe ait rezervasyon listesi.
+                  </p>
+                </div>
+                <div class="btn-group">
+                  <button
+                    id="toggleFilters"
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    <i class="bi bi-filter"></i>
+                    Filtrele
+                  </button>
+                  <button
+                    id="exportCsv"
+                    class="btn btn-outline-info"
+                    type="button"
+                  >
+                    <i class="bi bi-download"></i>
+                    Dışarı aktar
+                  </button>
+                </div>
+              </div>
+              <form id="filterForm" class="row g-2 mb-3 d-none">
+                <div class="col-md-3">
+                  <input
+                    type="text"
+                    id="filterName"
+                    class="form-control"
+                    placeholder="Müşteri adı"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <input
+                    type="text"
+                    id="filterPhone"
+                    class="form-control"
+                    placeholder="Telefon"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <input
+                    type="number"
+                    id="filterPerson"
+                    class="form-control"
+                    min="1"
+                    placeholder="Kişi sayısı"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <input type="date" id="filterStart" class="form-control" />
+                </div>
+                <div class="col-md-2">
+                  <input type="date" id="filterEnd" class="form-control" />
+                </div>
+                <div class="col-12 d-flex justify-content-end gap-2">
+                  <button
+                    type="button"
+                    id="clearFilters"
+                    class="btn btn-outline-secondary btn-sm"
+                  >
+                    Temizle
+                  </button>
+                  <button
+                    type="submit"
+                    id="applyFilters"
+                    class="btn btn-primary btn-sm"
+                  >
+                    Uygula
+                  </button>
+                </div>
+              </form>
+              <div id="reservationList" class="d-flex flex-column gap-3"></div>
+            </div>
+          </section>
+        </div>
+
+        <section id="settingsView" class="card shadow-sm mb-4 d-none">
+          <div class="card-body">
+            <div
+              class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3"
+            >
+              <div>
+                <h2 class="h5 mb-1">Ayarlar</h2>
+                <p class="text-muted mb-0">
+                  Masa ve rezervasyon varsayılanlarını ayarlayın.
+                </p>
+              </div>
+              <span class="badge bg-primary">Ayarlar</span>
+            </div>
+            <form id="adminForm" class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">
+                  <i class="bi bi-grid-1x2"></i>
+                  2 kişilik masa adedi
+                </label>
+                <input
+                  type="number"
+                  id="tableCount2"
+                  class="form-control"
+                  min="0"
+                  value="0"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">
+                  <i class="bi bi-grid-3x2-gap"></i>
+                  4 kişilik masa adedi
+                </label>
+                <input
+                  type="number"
+                  id="tableCount4"
+                  class="form-control"
+                  min="0"
+                  value="0"
+                  required
+                />
+              </div>
+              <div class="col-md-6 d-flex align-items-center">
+                <div class="form-check mt-4 mt-md-0">
+                  <input
+                    type="checkbox"
+                    id="allowSmallGroup"
+                    class="form-check-input"
+                  />
+                  <label class="form-check-label" for="allowSmallGroup">
+                    Küçük grup 4 kişilik masaya oturabilir
+                  </label>
+                </div>
+              </div>
+              <div class="col-12 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="bi bi-save"></i>
+                  Kaydet
+                </button>
+              </div>
+            </form>
+            <div
+              id="adminResult"
+              class="alert alert-info alert-dismissible fade show mt-3 mb-0"
+              role="alert"
+            >
+              <i class="bi bi-info-circle me-1"></i>
+              Ayar sonucu burada görünür.
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Kapat"
+              ></button>
+            </div>
+          </div>
+        </section>
+
+        <section id="logsView" class="card shadow-sm mb-4 d-none">
+          <div class="card-body">
+            <div
+              class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3"
+            >
+              <div>
+                <h2 class="h5 mb-1">İşlem Logları</h2>
+                <p class="text-muted mb-0">
+                  Kim ne işlem yaptı, gelişmiş log görünümü.
+                </p>
+              </div>
+              <span class="badge bg-dark">Developer</span>
+            </div>
+            <div id="logsList" class="list-group"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title h5" id="editModalTitle">
+              Rezervasyon düzenle
+            </h3>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Kapat"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm" class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">
+                  <i class="bi bi-person"></i>
+                  Müşteri adı
+                </label>
+                <input
+                  type="text"
+                  id="editCustomerName"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">
+                  <i class="bi bi-telephone"></i>
+                  Telefon
+                </label>
+                <input
+                  type="tel"
+                  id="editCustomerPhone"
+                  class="form-control"
+                  placeholder="05xx xxx xx xx"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">
+                  <i class="bi bi-people"></i>
+                  Kişi sayısı
+                </label>
+                <input
+                  type="number"
+                  id="editPersonCount"
+                  class="form-control"
+                  min="1"
+                  max="12"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">
+                  <i class="bi bi-calendar-event"></i>
+                  Tarih
+                </label>
+                <input
+                  type="date"
+                  id="editStartDate"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="col-12">
+                <label class="form-label">
+                  <i class="bi bi-journal-text"></i>
+                  Not
+                </label>
+                <textarea
+                  id="editNote"
+                  class="form-control"
+                  rows="2"
+                  placeholder="Opsiyonel not"
+                ></textarea>
+              </div>
+              <div class="col-12 d-flex justify-content-end gap-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Vazgeç
+                </button>
+                <button type="submit" class="btn btn-warning">
+                  <i class="bi bi-pencil-square"></i>
+                  Guncelle
+                </button>
+              </div>
+            </form>
+            <div
+              id="editResult"
+              class="alert alert-info mt-3 mb-0"
+              role="alert"
+            >
+              <i class="bi bi-info-circle me-1"></i>
+              Güncelleme sonucu burada görünür.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/code-by-m/codebym-footer/footer.js"></script>
+  </body>
+</html>

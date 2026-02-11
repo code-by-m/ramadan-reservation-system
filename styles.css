@@ -1,0 +1,35 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+.login-logo {
+  height: 256px;
+  width: auto;
+  max-height: none;
+  display: block;
+  margin: 0 auto;
+}
+
+.login-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.login-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: -42px;
+}
